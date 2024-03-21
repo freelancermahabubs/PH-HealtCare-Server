@@ -10,7 +10,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 app.use(morgan("tiny"));
 app.use("/api/v1/user", userRoutes);
-app.use("/api/v1/user", adminRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send({
     Message: "PH Health Care Server..",
