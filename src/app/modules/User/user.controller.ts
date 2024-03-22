@@ -13,6 +13,6 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
-export const userController = {
+export const UserController = {
   createAdmin,
 };
