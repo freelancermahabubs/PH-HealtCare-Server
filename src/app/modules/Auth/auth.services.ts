@@ -4,6 +4,8 @@ import * as bcrypt from "bcrypt";
 import {jwtHelpers} from "../../../helpars/jwtHelpers";
 import config from "../../../config";
 import {Secret} from "jsonwebtoken";
+import ApiError from "../../errors/ApiError";
+import httpStatus from "http-status";
 
 const logInUser = async (payload: {email: string; password: string}) => {
   const userData = await prisma.user.findUniqueOrThrow({
@@ -17,8 +19,8 @@ const logInUser = async (payload: {email: string; password: string}) => {
     userData.password
   );
 
-  if (isCorrectPassword) {
-    throw new Error("Password incorrect!");
+  if (!isCorrectPassword) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Password incorrect!");
   }
   const accessToken = jwtHelpers.generateToken(
     {
@@ -34,7 +36,7 @@ const logInUser = async (payload: {email: string; password: string}) => {
       role: userData.role,
     },
     config.jwt.refresh_token_secret_key as Secret,
-    config.jwt.refresh_token_expires_in  as string
+    config.jwt.refresh_token_expires_in as string
   );
 
   return {
@@ -47,32 +49,34 @@ const logInUser = async (payload: {email: string; password: string}) => {
 const refreshToken = async (token: string) => {
   let decodedData;
   try {
-      decodedData = jwtHelpers.verifyToken(token, config.jwt.refresh_token_secret_key as Secret);
-  }
-  catch (err) {
-      throw new Error("You are not authorized!")
+    decodedData = jwtHelpers.verifyToken(
+      token,
+      config.jwt.refresh_token_secret_key as Secret
+    );
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized!");
   }
 
   const userData = await prisma.user.findUniqueOrThrow({
-      where: {
-          email: decodedData.email,
-          status: UserStatus.ACTIVE
-      }
+    where: {
+      email: decodedData.email,
+      status: UserStatus.ACTIVE,
+    },
   });
 
-  const accessToken = jwtHelpers.generateToken({
+  const accessToken = jwtHelpers.generateToken(
+    {
       email: userData.email,
-      role: userData.role
-  },
-      config.jwt.jwt_secret_key as Secret,
-      config.jwt.expires_in as string
+      role: userData.role,
+    },
+    config.jwt.jwt_secret_key as Secret,
+    config.jwt.expires_in as string
   );
 
   return {
-      accessToken,
-      needPasswordChange: userData.needPasswordChange
+    accessToken,
+    needPasswordChange: userData.needPasswordChange,
   };
-
 };
 export const authService = {
   logInUser,
