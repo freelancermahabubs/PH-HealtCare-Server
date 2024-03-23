@@ -61,6 +61,8 @@ const softDeleteFromDB = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+
 export const AdminController = {
   getAllFromDB,
   getByIdFromDB,
