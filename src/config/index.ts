@@ -9,5 +9,15 @@ export default {
     expires_in: process.env.EXPIRES_IN,
     refresh_token_secret_key: process.env.REFRESH_TOKEN_SECRET_KEY,
     refresh_token_expires_in: process.env.REFRESH_TOKEN_EXPIRES_IN,
+    reset_pass_token_secret_key: process.env.RESET_PASS_TOKEN,
+    reset_pass_token_expires_in: process.env.RESET_TOKEN_EXPIRES_IN,
   },
+  reset_pass_link: process.env.RESET_PASS_LINK,
+  emailSender: {
+    smtp_host: process.env.SMTP_HOST,
+    smtp_service: process.env.SMTP_SERVICE,
+    smtp_port: process.env.SMTP_PORT,
+    smtp_email: process.env.SMTP_MAIL,
+    smtp_password: process.env.SMTP_PASSWORD
+  }
 };
