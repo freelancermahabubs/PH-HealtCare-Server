@@ -1,7 +1,7 @@
-export const adminFilterAbleFields = [
+export const adminFilterAbleFields: string[] = [
   "name",
   "email",
   "searchTerm",
   "contactNumber",
 ];
-export const adminSearchAbleFields = ["name", "email", 'contactNumber'];
+export const adminSearchAbleFields: string[] = ["name", "email", 'contactNumber'];
