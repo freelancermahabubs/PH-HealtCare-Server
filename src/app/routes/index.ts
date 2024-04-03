@@ -2,8 +2,9 @@ import express from "express";
 import {userRoutes} from "../modules/User/user.routes";
 import {adminRoutes} from "../modules/Admin/admin.routes";
 import {authRoutes} from "../modules/Auth/auth.routes";
-import { specialtiesRoutes } from "../modules/Specialties/specialties.routes";
-import { doctorRoutes } from "../modules/Doctor/doctor.routes";
+import {specialtiesRoutes} from "../modules/Specialties/specialties.routes";
+import {doctorRoutes} from "../modules/Doctor/doctor.routes";
+import {patientRoutes} from "../modules/Patient/patient.route";
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: "/doctor",
     route: doctorRoutes,
+  },
+  {
+    path: "/patient",
+    route: patientRoutes,
   },
 ];
 
