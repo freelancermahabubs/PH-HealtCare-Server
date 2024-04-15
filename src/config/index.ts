@@ -18,6 +18,15 @@ export default {
     smtp_service: process.env.SMTP_SERVICE,
     smtp_port: process.env.SMTP_PORT,
     smtp_email: process.env.SMTP_MAIL,
-    smtp_password: process.env.SMTP_PASSWORD
-  }
+    smtp_password: process.env.SMTP_PASSWORD,
+  },
+  ssl: {
+    storeId: process.env.STORE_ID,
+    storePass: process.env.STORE_PASS,
+    successUrl: process.env.SUCCESS_URL,
+    cancelUrl: process.env.CANCEL_URL,
+    failUrl: process.env.FAIL_URL,
+    sslPaymentApi: process.env.SSL_PAYMENT_API,
+    sslValidationApi: process.env.SSL_VALIDATIOIN_API,
+  },
 };
