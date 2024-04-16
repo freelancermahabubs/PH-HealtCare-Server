@@ -47,7 +47,7 @@ const initPayment = async (paymentData: IPaymentData) => {
     });
 
     return response.data;
-  } catch (err) {
+  } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Payment erro occured!");
   }
 };
@@ -60,7 +60,7 @@ const validatePayment = async (payload: any) => {
     });
 
     return response.data;
-  } catch (err) {
+  } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Payment validation failed!");
   }
 };
