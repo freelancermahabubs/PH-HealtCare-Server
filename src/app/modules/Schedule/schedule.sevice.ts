@@ -1,10 +1,15 @@
 import {addHours, addMinutes, format} from "date-fns";
 import prisma from "../../../shared/prisma";
-import {IFilterRequest, ISchedule} from "./schedule.interface";
 import {Prisma, Schedule} from "@prisma/client";
-import { paginationHelper } from "../../../helpars/paginationHelper";
-import { IAuthUser } from "../../interfaces/common";
-import { IPaginationOptions } from "../../interfaces/pagination";
+import {IFilterRequest, ISchedule} from "./schedule.interface";
+import {IPaginationOptions} from "../../interfaces/pagination";
+import {paginationHelper} from "../../../helpars/paginationHelper";
+import {IAuthUser} from "../../interfaces/common";
+
+const convertDateTime = async (date: Date) => {
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() + offset);
+};
 
 const inserIntoDB = async (payload: ISchedule): Promise<Schedule[]> => {
   const {startDate, endDate, startTime, endTime} = payload;
@@ -39,9 +44,17 @@ const inserIntoDB = async (payload: ISchedule): Promise<Schedule[]> => {
     );
 
     while (startDateTime < endDateTime) {
+      // const scheduleData = {
+      //     startDateTime: startDateTime,
+      //     endDateTime: addMinutes(startDateTime, interverlTime)
+      // }
+
+      const s = await convertDateTime(startDateTime);
+      const e = await convertDateTime(addMinutes(startDateTime, interverlTime));
+
       const scheduleData = {
-        startDateTime: startDateTime,
-        endDateTime: addMinutes(startDateTime, interverlTime),
+        startDateTime: s,
+        endDateTime: e,
       };
 
       const existingSchedule = await prisma.schedule.findFirst({
@@ -120,7 +133,7 @@ const getAllFromDB = async (
   const doctorScheduleIds = doctorSchedules.map(
     (schedule) => schedule.scheduleId
   );
-  
+  console.log(doctorScheduleIds);
 
   const result = await prisma.schedule.findMany({
     where: {
@@ -159,18 +172,19 @@ const getAllFromDB = async (
 
 const getByIdFromDB = async (id: string): Promise<Schedule | null> => {
   const result = await prisma.schedule.findUnique({
-      where: {
-          id,
-      },
+    where: {
+      id,
+    },
   });
+  //console.log(result?.startDateTime.getHours() + ":" + result?.startDateTime.getMinutes())
   return result;
 };
 
 const deleteFromDB = async (id: string): Promise<Schedule> => {
   const result = await prisma.schedule.delete({
-      where: {
-          id,
-      },
+    where: {
+      id,
+    },
   });
   return result;
 };
@@ -179,5 +193,5 @@ export const ScheduleService = {
   inserIntoDB,
   getAllFromDB,
   getByIdFromDB,
-  deleteFromDB
+  deleteFromDB,
 };
